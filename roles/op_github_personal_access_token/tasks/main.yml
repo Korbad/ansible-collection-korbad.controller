@@ -1,0 +1,7 @@
+---
+- name: Fetch github personal access token from 1password
+  include_role:
+    name: op_get_token
+  vars:
+    op_managed_user_secret_reference: "{{ op_github_personal_access_token_reference }}"
+    op_managed_user_secret_name: github_personal_access_token

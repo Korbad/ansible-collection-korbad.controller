@@ -1,0 +1,25 @@
+- name: Check if the secret file exists at {{ managed_user_secret_path }}
+  stat:
+    path: "{{ managed_user_secret_path }}"
+  register: secret_file_stat
+  delegate_to: localhost
+  vars:
+    managed_user_secret_path: "{{ (managed_user_secrets_path, controller_managed_user_secret_name) | path_join }}"
+
+- name: Fail if the secret file doesn't exist
+  fail:
+    msg: "The secret file {{ managed_user_secret_path }} does not exist."
+  when: not secret_file_stat.stat.exists
+
+- name: Perform lookup on ansible controller and set fact for looked-up secret
+  set_fact:
+    "controller_{{ controller_managed_user_secret_name }}": "{{ lookup('file', managed_user_secret_path) }}"
+  no_log: true
+  vars:
+    managed_user_secret_path: "{{ (managed_user_secrets_path, controller_managed_user_secret_name) | path_join }}"
+    managed_vault_password_filename: default_vault
+    managed_vault_directory_path: "{{ (managed_secrets_path, managed_vault_password_filename) | path_join }}"
+    managed_vault_password_file_path: "{{ (managed_vault_directory_path, managed_vault_password_filename) | path_join }}"
+  environment:
+    DEFAULT_VAULT_IDENTITY_LIST: default
+    DEFAULT_VAULT_PASSWORD_FILE: "{{ managed_vault_password_file_path }}"

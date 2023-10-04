@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Command to view the Ansible Vault content
+vault_command="{{ vault_command }}"
+
+# Fetch and set the OP_SERVICE_ACCOUNT_TOKEN environment variable
+OP_SERVICE_ACCOUNT_TOKEN=$(eval $vault_command | grep 'OP_SERVICE_ACCOUNT_TOKEN' | awk -F ': ' '{print $2}')
+
+# Export the token as an environment variable
+export OP_SERVICE_ACCOUNT_TOKEN

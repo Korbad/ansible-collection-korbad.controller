@@ -1,0 +1,14 @@
+---
+- name: Fetch {{ controller_op_managed_user_secret_reference }} from 1Password on Ansible Controller
+  command:
+    cmd: "op read -n {{ controller_op_managed_user_secret_reference }}"
+  environment:
+    OP_FORMAT: json
+    OP_SERVICE_ACCOUNT_TOKEN: "{{ controller_op_service_account_token }}"
+  register: op_result
+  delegate_to: localhost
+
+- name: Set fact for {{ controller_op_managed_user_secret_name }}
+  set_fact:
+    "controller_{{ controller_op_managed_user_secret_name }}": "{{ op_result.stdout }}"
+  no_log: true
