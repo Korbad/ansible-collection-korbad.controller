@@ -1,0 +1,6 @@
+- name: "Load and set fact for {{ remote_host_var_name }}"
+  set_fact:
+    "{{ remote_host_var_name }}": "{{ lookup('file', path_to_file_on_controller) }}"
+    cacheable: true
+  vars:
+    path_to_file_on_controller: "{{ playbook_dir }}/vars/{{ inventory_hostname }}/{{ remote_host_var_name }}.yml"
