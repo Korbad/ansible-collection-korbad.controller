@@ -2,6 +2,7 @@
   file:
     path: "{{ playbook_dir }}/vars/{{ inventory_hostname }}"
     state: directory
+  changed_when: false
 
 - name: "Save {{ remote_host_var_name }} to a file on Ansible controller"
   delegate_to: localhost
@@ -10,3 +11,4 @@
     dest: "{{ playbook_dir }}/vars/{{ inventory_hostname }}/{{ remote_host_var_name }}.yml"
   vars:
     value_to_cache: "{{ vars[remote_host_var_name] }}"
+  changed_when: false
